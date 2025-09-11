@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f9;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    color: rgb(16, 71, 202);
+    font-size: 16px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-box h3{
+    font-size: 2em;
+}
+
+input,
+button {
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button{
+    background-color: rgb(16, 71, 202);
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(10, 45, 128);
+}
+
+#mesFiltro {
+    margin-left: 5px;
+}
+
+.tabela-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background: #f0f0f0;
+}
+
+.red-text {
+    color: red;
+    font-weight: bold;
+}
+
+.yellow-text {
+    color: orange;
+    font-weight: bold;
+}
