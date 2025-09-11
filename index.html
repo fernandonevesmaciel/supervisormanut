@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+     
+    <meta charset="UTF-8">
+      <title>Controle de Serviços</title>
+     
+    <script type="module" src="app.js"></script>
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input,
+        button {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        #mesFiltro {
+            margin-left: 5px;
+        }
+
+        .tabela-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .red-text {
+            color: red;
+            font-weight: bold;
+        }
+
+        .yellow-text {
+            color: orange;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+      <div class="login-box">
+            <div>
+                <h3>Login</h3>
+            </div>
+            <div>
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="senha" placeholder="Senha">
+                <input type="month" id="mesFiltro">
+                <button id="btnLogin">Entrar</button>
+            </div>
+    </div>
+
+      <div id="container-horas-app1" class="tabela-container"></div>
+      <div id="container-horas-app2" class="tabela-container"></div>
+      <div id="container-horas-app3" class="tabela-container"></div>
+      <div id="container-horas-app4" class="tabela-container"></div>
+</body>
+
+</html>
