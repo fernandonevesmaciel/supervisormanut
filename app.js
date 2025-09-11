@@ -210,7 +210,7 @@ async function loginEmTodos(email, senha) {
         });
 
     } catch (error) {
-        alert("Erro no login: " + error.message);
+        alert('Seu usuário ou senha estão incorretos. Tente novamente.');
     }
 }
 
