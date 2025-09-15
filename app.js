@@ -102,7 +102,7 @@ function formatarMinutosParaHoras(min) {
 }
 
 // ======================
-// FUNÇÃO PARA MOSTRAR TABELA (AJUSTADO)
+// FUNÇÃO PARA MOSTRAR TABELA DE HORAS POR FUNCIONÁRIO
 // ======================
 async function exibirHorasPorFuncionario(db, containerId, mesSelecionado, titulo, funcionariosProjeto, jornadaDiariaEmMinutos) {
     const container = document.getElementById(containerId);
@@ -142,19 +142,19 @@ async function exibirHorasPorFuncionario(db, containerId, mesSelecionado, titulo
     });
 
     let tabelaHTML = `
-        <h2 style="text-align:center;">${titulo}</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Funcionário</th>
-                    <th>Horas Disponíveis</th>
-                    <th>Horas Trabalhadas</th>
-                    <th>Aproveitamento</th>
-                    <th>Dias Trabalhados</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+        <h2 style="text-align:center;">${titulo}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Funcionário</th>
+                    <th>Horas Disponíveis</th>
+                    <th>Horas Trabalhadas</th>
+                    <th>Aproveitamento</th>
+                    <th>Dias Trabalhados</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
 
     let totalDisp = 0, totalTrab = 0;
 
@@ -170,33 +170,111 @@ async function exibirHorasPorFuncionario(db, containerId, mesSelecionado, titulo
         totalTrab += trab;
 
         tabelaHTML += `
-            <tr>
-                <td>${f}</td>
-                <td>${formatarMinutosParaHoras(disp)}</td>
-                <td>${formatarMinutosParaHoras(trab)}</td>
-                <td class="${classe}">${aproveitamento.toFixed(2)}%</td>
-                <td>${dias}</td>
-            </tr>
-        `;
+            <tr>
+                <td>${f}</td>
+                <td>${formatarMinutosParaHoras(disp)}</td>
+                <td>${formatarMinutosParaHoras(trab)}</td>
+                <td class="${classe}">${aproveitamento.toFixed(2)}%</td>
+                <td>${dias}</td>
+            </tr>
+        `;
     });
 
     const aproveitamentoTotal = totalDisp > 0 ? (totalTrab / totalDisp) * 100 : 0;
 
     tabelaHTML += `
-        <tr style="font-weight:bold; background:#f9f9f9;">
-            <td>Total da Equipe</td>
-            <td>${formatarMinutosParaHoras(totalDisp)}</td>
-            <td>${formatarMinutosParaHoras(totalTrab)}</td>
-            <td>${aproveitamentoTotal.toFixed(2)}%</td>
-            <td></td>
-        </tr>
-    </tbody></table>`;
+        <tr style="font-weight:bold; background:#f9f9f9;">
+            <td>Total da Equipe</td>
+            <td>${formatarMinutosParaHoras(totalDisp)}</td>
+            <td>${formatarMinutosParaHoras(totalTrab)}</td>
+            <td>${aproveitamentoTotal.toFixed(2)}%</td>
+            <td></td>
+        </tr>
+    </tbody></table>`;
 
     container.innerHTML = tabelaHTML;
 }
 
 // ======================
-// LOGIN EM TODOS PROJETOS (AJUSTADO)
+// NOVA FUNÇÃO: PARA MOSTRAR TABELA DE QUANTIDADE POR SERVIÇO
+// ======================
+async function exibirQuantidadePorServico(db, containerId, mesSelecionado) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const [ano, mes] = mesSelecionado.split('-').map(Number);
+    const dataInicioMes = new Date(ano, mes - 1, 1);
+    const dataFimMes = new Date(ano, mes, 1);
+
+    const servicosRef = collection(db, "servicos");
+    const q = query(
+        servicosRef,
+        where("dataRegistro", ">=", dataInicioMes),
+        where("dataRegistro", "<", dataFimMes)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    const servicosUnicos = {};
+    const quantidadePorTipo = {};
+
+    querySnapshot.forEach(doc => {
+        const { dataRegistro, horaInicio, horaTermino, tipoServico } = doc.data();
+
+        // Cria uma chave única para cada serviço
+        const dataString = dataRegistro.toDate().toISOString().split('T')[0];
+        const chaveUnica = `${dataString}-${horaInicio}-${horaTermino}`;
+
+        // Verifica se já processamos este serviço
+        if (!servicosUnicos[chaveUnica]) {
+            servicosUnicos[chaveUnica] = true; // Marca como processado
+
+            // Incrementa a contagem para o tipo de serviço
+            if (quantidadePorTipo[tipoServico]) {
+                quantidadePorTipo[tipoServico]++;
+            } else {
+                quantidadePorTipo[tipoServico] = 1;
+            }
+        }
+    });
+
+    let tabelaHTML = `
+        <h2 style="text-align:center;">Quantidade de Serviços por Tipo</h2>
+        <table class="tabela-contagem">
+            <thead>
+                <tr>
+                    <th>Tipo de Serviço</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    const tipos = Object.keys(quantidadePorTipo).sort();
+
+    if (tipos.length === 0) {
+        tabelaHTML += `<tr><td colspan="2">Nenhum serviço encontrado para o período selecionado.</td></tr>`;
+    } else {
+        tipos.forEach(tipo => {
+            tabelaHTML += `
+                <tr>
+                    <td>${tipo}</td>
+                    <td>${quantidadePorTipo[tipo]}</td>
+                </tr>
+            `;
+        });
+    }
+
+    tabelaHTML += `
+            </tbody>
+        </table>
+    `;
+
+    container.innerHTML = tabelaHTML;
+}
+
+// ======================
+// LOGIN EM TODOS PROJETOS (AJUSTADO COM A NOVA FUNÇÃO)
 // ======================
 async function loginEmTodos(email, senha) {
     try {
@@ -206,7 +284,11 @@ async function loginEmTodos(email, senha) {
         const mesSelecionado = document.getElementById("mesFiltro").value || new Date().toISOString().slice(0, 7);
 
         projetos.forEach((p, index) => {
+            // Chamada para a tabela de horas por funcionário
             exibirHorasPorFuncionario(dbs[index], p.container, mesSelecionado, p.titulo, p.funcionarios, p.jornadaDiariaEmMinutos);
+
+            // NOVA CHAMADA para a tabela de quantidade por serviço
+            exibirQuantidadePorServico(dbs[index], `container-quantidade-${p.id}`, mesSelecionado);
         });
 
     } catch (error) {
