@@ -27,7 +27,7 @@ const projetos = [
         id: "app2",
         container: "container-horas-app2",
         titulo: "HORAS MECÂNICA",
-        funcionarios: ["Valdinei", "Wanner", "Sandro", "Victor", "Ericky", "André Bacceto", "Guilherme", "Abib", "Diogo", "Luiz Felipe", "Fabiano", "Leigmar", "Vitor Reis", "Gabriel", "Allison"],
+        funcionarios: ["Valdinei", "Wanner", "Sandro", "Victor", "André Bacceto", "Guilherme", "Abib", "Diogo", "Luiz Felipe", "Fabiano", "Leigmar", "Vitor Reis", "Gabriel", "Allison"],
         jornadaDiariaEmMinutos: 7 * 60 + 20, // 7h20min
         config: {
             apiKey: "AIzaSyAN_UVg8c9Cdcvok9-WHXJiZYnOdcmpMjI",
